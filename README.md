@@ -4,14 +4,16 @@
   Bouncing Button 
   <br>
 </h1>
-All Flutter Tutorials plus additional COde  and shorter posts can be found on the [Official AllTechSavvy website](https://alltechsavvy.com/). 
-
 
 ## 📱 Screenshots #
 
 <p align="center">
    <img src="https://user-images.githubusercontent.com/43273993/58762394-4eb62480-856d-11e9-8032-ab636ea33bf1.gif">
   </p>
+ 
+ 
+## 🖥 Flutter Tutorial
+All Flutter Tutorials plus additional Code and shorter posts can be found on the [Official AllTechSavvy website](https://www.alltechsavvy.com/). 
 
 ## ⚙️ Built with Amazing Tools
 * [Flutter](https://flutter.dev/) - Beautiful native apps in record time.
