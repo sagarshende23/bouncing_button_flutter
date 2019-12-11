@@ -24,6 +24,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       });
     super.initState();
   }
+  
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
