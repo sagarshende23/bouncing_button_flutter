@@ -17,9 +17,8 @@
   <br>
 </h1>
 <p align="center">
- <a href='https://api.codemagic.io/artifacts/7336d1a8-039b-4dca-8b24-0162cf6bf0f2/aeee97ea-36d3-4c7d-a2ed-4d6986993ba7/app.apk'><img alt='Get it on Google Play' src='https://raw.githubusercontent.com/sagarshende23/bouncing_button_flutter/master/download.png' height=70px width=300px/></a>
+<a href="https://api.codemagic.io/artifacts/7336d1a8-039b-4dca-8b24-0162cf6bf0f2/aeee97ea-36d3-4c7d-a2ed-4d6986993ba7/app.apk" title="Image from PNG Image"><img src="https://pngimage.net/wp-content/uploads/2018/05/download-android-app-png-4.png" height=90px width=330px alt="download android app png 4"></a>
 </p>
- 
  
 ## 🖥 Flutter Tutorial
 All Flutter Tutorials plus additional Code and shorter posts can be found on the [Official AllTechSavvy website](https://www.alltechsavvy.com/). 
