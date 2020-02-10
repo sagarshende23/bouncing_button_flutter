@@ -10,6 +10,15 @@
 <p align="center">
    <img src="https://user-images.githubusercontent.com/43273993/58762394-4eb62480-856d-11e9-8032-ab636ea33bf1.gif">
   </p>
+  
+<h1 align="center">
+    <br>
+  Download the Following App for Preview 
+  <br>
+</h1>
+<p align="center">
+ <a href='https://api.codemagic.io/artifacts/7336d1a8-039b-4dca-8b24-0162cf6bf0f2/aeee97ea-36d3-4c7d-a2ed-4d6986993ba7/app.apk'><img alt='Get it on Google Play' src='https://raw.githubusercontent.com/sagarshende23/bouncing_button_flutter/master/download.png' height=70px width=300px/></a>
+</p>
  
  
 ## 🖥 Flutter Tutorial
