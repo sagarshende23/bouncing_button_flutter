@@ -17,7 +17,7 @@
   <br>
 </h1>
 <p align="center">
-<a href="https://api.codemagic.io/artifacts/7336d1a8-039b-4dca-8b24-0162cf6bf0f2/aeee97ea-36d3-4c7d-a2ed-4d6986993ba7/app.apk" title="Image from PNG Image"><img src="https://pngimage.net/wp-content/uploads/2018/05/download-android-app-png-4.png" height=85px width=330px alt="download android app png 4"></a>
+<a href="https://api.codemagic.io/artifacts/7336d1a8-039b-4dca-8b24-0162cf6bf0f2/aeee97ea-36d3-4c7d-a2ed-4d6986993ba7/app.apk" title="Image from PNG Image"><img src="https://i.imgur.com/srMcFcx.png" height="115"width="300" alt="download android app png 4"></a>
 </p>
  
 ## 🖥 Flutter Tutorial
