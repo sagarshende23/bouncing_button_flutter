@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
-  double _scale;
-  AnimationController _controller;
+class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  late double _scale;
+  late AnimationController _controller;
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
+      duration: const Duration(
         milliseconds: 200,
       ),
       lowerBound: 0.0,
@@ -24,7 +26,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       });
     super.initState();
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -40,22 +42,24 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Tap on the Below Button',style: TextStyle(color: Colors.grey[400],fontSize: 20.0),),
-            SizedBox(
+            Text(
+              'Tap on the Below Button',
+              style: TextStyle(color: Colors.grey[400], fontSize: 20.0),
+            ),
+            const SizedBox(
               height: 20.0,
             ),
-             Center(
-            child: GestureDetector(
-              onTapDown: _onTapDown,
-              onTapUp: _onTapUp,
-              child: Transform.scale(
-                scale: _scale,
-                child: _animatedButtonUI,
+            Center(
+              child: GestureDetector(
+                onTapDown: _onTapDown,
+                onTapUp: _onTapUp,
+                child: Transform.scale(
+                  scale: _scale,
+                  child: _animatedButtonUI,
+                ),
               ),
             ),
-          ),
           ],
-                  
         ),
       ),
     );
@@ -66,14 +70,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         width: 200,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100.0),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Color(0x80000000),
                 blurRadius: 30.0,
                 offset: Offset(0.0, 5.0),
               ),
             ],
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
@@ -81,7 +85,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 Color(0xFFFF3500),
               ],
             )),
-        child: Center(
+        child: const Center(
           child: Text(
             'tap',
             style: TextStyle(
