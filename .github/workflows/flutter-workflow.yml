@@ -63,7 +63,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [build-android, build-ios, build-macos]
+    needs: [build-android, build-ios]
     steps:
       - uses: actions/checkout@v1
 
