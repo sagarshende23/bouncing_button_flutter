@@ -11,16 +11,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
         with:
           java-version: '12.x'
-      - uses: subosito/flutter-action@v1
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
-      - run: flutter pub get
-      - run: flutter build apk --release --split-per-abi
+      
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+      
+      - name: Flutter testing
+        run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
 
       - name: Push to Releases
+        if: success()  # This ensures the previous steps must succeed
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/*"
