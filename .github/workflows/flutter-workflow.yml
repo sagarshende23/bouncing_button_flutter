@@ -1,4 +1,116 @@
-name: Build and Release
+# name: Flutter CI
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   build-android:
+#     name: Build and Release APK
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v1
+
+#       - name: Setup Java
+#         uses: actions/setup-java@v1
+#         with:
+#           java-version: '12.x'
+      
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v1
+#         with:
+#           channel: 'stable'
+      
+#       - name: Get Flutter Dependencies
+#         run: flutter pub get
+      
+#       - name: Build APK
+#         run: flutter build apk --release --split-per-abi
+
+#       - name: Upload APK
+#         if: success()
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: android-apk
+#           path: build/app/outputs/apk/release/*.apk
+
+#   build-ios:
+#     name: Build and Release iOS
+#     runs-on: macos-latest
+#     steps:
+#       - uses: actions/checkout@v2
+
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           flutter-version: '2.x'
+
+#       - name: Install dependencies
+#         run: flutter pub get
+
+#       - name: Build iOS
+#         run: flutter build ios --release --no-codesign
+
+#       - name: Create IPA
+#         run: xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/ios
+
+#       - name: Upload IPA
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: ios-ipa
+#           path: build/ios/*.ipa
+#     # runs-on: macos-latest
+#     # steps:
+#     #   - uses: actions/checkout@v1
+
+#     #   - name: Setup Flutter
+#     #     uses: subosito/flutter-action@v1
+#     #     with:
+#     #       channel: 'stable'
+      
+#     #   - name: Get Flutter Dependencies
+#     #     run: flutter pub get
+
+#     #   - name: Build iOS
+#     #     run: flutter build ios --release --no-codesign
+
+#     #   - name: Upload iOS Build
+#     #     if: success()
+#     #     uses: actions/upload-artifact@v2
+#     #     with:
+#     #       name: ios-build
+#     #       path: build/ios/iphoneos/Runner.app
+
+#   release:
+#     name: Create Release
+#     runs-on: ubuntu-latest
+#     needs: [build-android, build-ios]
+#     steps:
+#       - uses: actions/checkout@v1
+
+#       - name: Download Artifacts
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: android-apk
+#           path: ./artifacts/android
+
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: ios-build
+#           path: ./artifacts/ios
+
+#       - name: Create Release
+#         uses: ncipollo/release-action@v1
+#         with:
+#           artifacts: |
+#             ./artifacts/android/*
+#             ./artifacts/ios/*
+#           tag: v1.0.${{ github.run_number }}
+#           token: ${{ secrets.GITHUB_TOKEN }}
+
+
+name: Release Android and iOS
 
 on:
   push:
@@ -6,52 +118,76 @@ on:
       - main
 
 jobs:
-  build_android:
+  build_and_release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '2.x'
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
 
-    - name: Install dependencies
-      run: flutter pub get
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.x'
 
-    - name: Build APK
-      run: flutter build apk --release
+      - name: Install dependencies
+        run: flutter pub get
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-release
-        path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Build Android APK
+        run: flutter build apk --release --split-per-abi
 
-  build_ios:
-    runs-on: macos-latest
-    steps:
-    - name: Check out code
-      uses: actions/checkout@v2
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-apk
+          path: build/app/outputs/apk/release/*.apk
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '2.x'
+      - name: Build iOS IPA
+        run: flutter build ios --release --no-codesign
 
-    - name: Install dependencies
-      run: flutter pub get
+      - name: Create iOS IPA
+        run: xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/ios
 
-    - name: Build iOS
-      run: flutter build ios --release --no-codesign
+      - name: Upload iOS IPA
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-ipa
+          path: build/ios/*.ipa
 
-    - name: Export IPA
-      run: flutter build ipa --release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          body: |
+            Release of the Android and iOS apps.
+          draft: false
+          prerelease: false
 
-    - name: Upload IPA
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-release
-        path: build/ios/iphoneos/Runner.app
+      - name: Upload Android Release Asset
+        id: upload-android-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/app/outputs/apk/release/*.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload iOS Release Asset
+        id: upload-ios-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/ios/*.ipa
+          asset_name: app-release.ipa
+          asset_content_type: application/octet-stream
