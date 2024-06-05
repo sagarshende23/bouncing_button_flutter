@@ -47,17 +47,6 @@ jobs:
     - name: Build iOS
       run: flutter build ios --release --no-codesign
 
-    - name: Install Apple certificate and provisioning profile
-      uses: mmarket/apple-certificate-installer@v1
-      with:
-        developer-username: ${{ secrets.APPLE_DEVELOPER_USERNAME }}
-        developer-password: ${{ secrets.APPLE_DEVELOPER_PASSWORD }}
-        certificate-base64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
-        provisioning-profile-base64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
-
-    - name: Archive iOS
-      run: flutter build ios --release --no-codesign
-
     - name: Export IPA
       run: flutter build ipa --release
 
@@ -65,4 +54,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: app-release
-        path: build/ios/archive/Runner.ipa
+        path: build/ios/iphoneos/Runner.app
