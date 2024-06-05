@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: Build and Release apk
+  build-android:
+    name: Build and Release APK
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -20,21 +20,158 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: 'stable'
       
       - name: Get Flutter Dependencies
         run: flutter pub get
       
-      - name: Flutter testing
-        run: flutter test
-
       - name: Build APK
         run: flutter build apk --release --split-per-abi
 
-      - name: Push to Releases
-        if: success()  # This ensures the previous steps must succeed
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-apk
+          path: build/app/outputs/apk/release/*.apk
+
+  build-ios:
+    name: Build and Release iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+
+      - name: Upload iOS Build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-build
+          path: build/ios/iphoneos/Runner.app
+
+  build-macos:
+    name: Build and Release macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Build macOS
+        run: flutter build macos --release
+
+      - name: Upload macOS Build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos-build
+          path: build/macos/Build/Products/Release/*.app
+
+  build-linux:
+    name: Build and Release Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Build Linux
+        run: flutter build linux --release
+
+      - name: Upload Linux Build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: build/linux/Build/Products/Release/*
+
+  build-web:
+    name: Build and Release Flutter Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Upload Flutter Web Build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: flutter-web-build
+          path: build/web
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build-android, build-ios, build-macos, build-linux, build-web]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: android-apk
+          path: ./artifacts/android
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: ios-build
+          path: ./artifacts/ios
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: macos-build
+          path: ./artifacts/macos
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: linux-build
+          path: ./artifacts/linux
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: flutter-web-build
+          path: ./artifacts/web
+
+      - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*"
+          artifacts: |
+            ./artifacts/android/*
+            ./artifacts/ios/*
+            ./artifacts/macos/*
+            ./artifacts/linux/*
+            ./artifacts/web/*
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
